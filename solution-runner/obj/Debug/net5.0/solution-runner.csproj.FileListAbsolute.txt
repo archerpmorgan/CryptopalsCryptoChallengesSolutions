@@ -1,0 +1,15 @@
+/Users/archermorgan/Documents/Personal Projects/Cryptopals/CryptopalsCryptoChallengesSolutions/solution-runner/bin/Debug/net5.0/solution-runner.deps.json
+/Users/archermorgan/Documents/Personal Projects/Cryptopals/CryptopalsCryptoChallengesSolutions/solution-runner/bin/Debug/net5.0/solution-runner.runtimeconfig.json
+/Users/archermorgan/Documents/Personal Projects/Cryptopals/CryptopalsCryptoChallengesSolutions/solution-runner/bin/Debug/net5.0/solution-runner.runtimeconfig.dev.json
+/Users/archermorgan/Documents/Personal Projects/Cryptopals/CryptopalsCryptoChallengesSolutions/solution-runner/bin/Debug/net5.0/solution-runner.dll
+/Users/archermorgan/Documents/Personal Projects/Cryptopals/CryptopalsCryptoChallengesSolutions/solution-runner/bin/Debug/net5.0/ref/solution-runner.dll
+/Users/archermorgan/Documents/Personal Projects/Cryptopals/CryptopalsCryptoChallengesSolutions/solution-runner/bin/Debug/net5.0/solution-runner.pdb
+/Users/archermorgan/Documents/Personal Projects/Cryptopals/CryptopalsCryptoChallengesSolutions/solution-runner/obj/Debug/net5.0/solution-runner.csprojAssemblyReference.cache
+/Users/archermorgan/Documents/Personal Projects/Cryptopals/CryptopalsCryptoChallengesSolutions/solution-runner/obj/Debug/net5.0/solution-runner.GeneratedMSBuildEditorConfig.editorconfig
+/Users/archermorgan/Documents/Personal Projects/Cryptopals/CryptopalsCryptoChallengesSolutions/solution-runner/obj/Debug/net5.0/solution-runner.AssemblyInfoInputs.cache
+/Users/archermorgan/Documents/Personal Projects/Cryptopals/CryptopalsCryptoChallengesSolutions/solution-runner/obj/Debug/net5.0/solution-runner.AssemblyInfo.cs
+/Users/archermorgan/Documents/Personal Projects/Cryptopals/CryptopalsCryptoChallengesSolutions/solution-runner/obj/Debug/net5.0/solution-runner.csproj.CoreCompileInputs.cache
+/Users/archermorgan/Documents/Personal Projects/Cryptopals/CryptopalsCryptoChallengesSolutions/solution-runner/obj/Debug/net5.0/solution-runner.dll
+/Users/archermorgan/Documents/Personal Projects/Cryptopals/CryptopalsCryptoChallengesSolutions/solution-runner/obj/Debug/net5.0/ref/solution-runner.dll
+/Users/archermorgan/Documents/Personal Projects/Cryptopals/CryptopalsCryptoChallengesSolutions/solution-runner/obj/Debug/net5.0/solution-runner.pdb
+/Users/archermorgan/Documents/Personal Projects/Cryptopals/CryptopalsCryptoChallengesSolutions/solution-runner/obj/Debug/net5.0/solution-runner.genruntimeconfig.cache
