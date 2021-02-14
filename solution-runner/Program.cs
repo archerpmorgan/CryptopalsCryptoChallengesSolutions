@@ -1,6 +1,7 @@
 ﻿using System.Net.NetworkInformation;
 using System.Globalization;
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -28,34 +29,35 @@ namespace solution_runner
         }
 
 
-        // frequencies of letters in english (source: https://www3.nd.edu/~busiforc/handouts/cryptography/letterfrequencies.html)
+        // frequencies of letters in english (http://www.macfreek.nl/memory/Letter_Distribution)
         static private Dictionary<char, double> charFreqsReference = new Dictionary<char, double> {
-            { 'a', 8.4966 },
-            { 'b', 10.56 },
-            { 'c', 4.5388 },
-            { 'd', 3.3844 },
-            { 'e', 11.1607 },
-            { 'f', 1.8121 },
-            { 'g', 2.4705 },
-            { 'h', 3.0034 },
-            { 'i', 7.5448 },
-            { 'j', 0.1965 },
-            { 'k', 1.1016 },
-            { 'l', 5.4893 },
-            { 'm', 3.0129 },
-            { 'n', 6.6544 },
-            { 'o', 7.1635 },
-            { 'p', 3.1671 },
-            { 'q', 0.1962 },
-            { 'r', 7.5809 },
-            { 's', 5.7351 },
-            { 't', 6.9509 },
-            { 'u', 3.6308 },
-            { 'v', 1.0074 },
-            { 'w', 1.2899 },
-            { 'x', 0.2902 },
-            { 'y', 1.7779 },
-            { 'z', 0.2722 },
+            { ' ', .1828846265 },
+            { 'a', .06532 },
+            { 'b', .01258 },
+            { 'c', .02234 },
+            { 'd', .03282 },
+            { 'e', .10266 },
+            { 'f', .01983 },
+            { 'g', .01624 },
+            { 'h', .04978 },
+            { 'i', .05668 },
+            { 'j', .00097 },
+            { 'k', .00561 },
+            { 'l', .03317 },
+            { 'm', .02206 },
+            { 'n', .05712 },
+            { 'o', .06159 },
+            { 'p', .01504 },
+            { 'q', .00084 },
+            { 'r', .04987 },
+            { 's', .05317 },
+            { 't', .07517 },
+            { 'u', .02276 },
+            { 'v', .00796 },
+            { 'w', .01704 },
+            { 'x', .00141 },
+            { 'y', .01427 },
+            { 'z', .00051 },
         };
 
         // given a string, calculate a measure of how different the char frequencies are from what we would expect in an english sentence.
@@ -63,14 +65,12 @@ namespace solution_runner
 
             double accumulator = 0;
             Dictionary<char, int> characterCount = text.ToLower()
-                .Where(c => Char.IsLetter(c))
                 .GroupBy(c => c)
                 .ToDictionary(k => k.Key, v => v.Count());
-            foreach(KeyValuePair<char, double> entry in charFreqsReference)
+            foreach(KeyValuePair<char, int> entry in characterCount)
             {
-                // calculate observed freq for char in string
-                var freq = characterCount.ContainsKey(entry.Key) ? ((double) characterCount[entry.Key] / (double) text.Length) : 0 ;
-                accumulator += Math.Pow((freq - entry.Value), 2);
+                var expected = charFreqsReference.ContainsKey(entry.Key) ? (charFreqsReference[entry.Key]*text.Length): 0;
+                accumulator += Math.Abs(entry.Value - expected);
             }
             return accumulator;
         }
@@ -85,7 +85,6 @@ namespace solution_runner
             
             // convert to ascii?
             ascii = Encoding.ASCII.GetString(cyphertext);
-            var chars = ascii.ToCharArray();
 
             score = getObservedDistance(ascii);
         }
@@ -101,7 +100,7 @@ namespace solution_runner
         }
 
         // assuming hex is an english string that has been XORd against one single byte character, find the most probable
-        static char FindXORCipher(string hex) {
+        static ScoredByte FindXORCipher(string hex) {
 
             char[] chars = hex.ToCharArray();
 
@@ -125,7 +124,7 @@ namespace solution_runner
             scores.Sort();
 
             //should return all ties here, but its clearly the second one
-            return (char) scores[1].b;
+            return scores[0];
         }
 
         static void Main(string[] args)
@@ -148,10 +147,17 @@ namespace solution_runner
             map.Add('e', 0b1110);
             map.Add('f', 0b1111);
 
-            var result = FindXORCipher("1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736");
-            var answer = 88;
-            Debug.Assert( result == answer );
-        }
+            var path = "Input.txt";
+            string text = System.IO.File.ReadAllText(path);
+            var lines = text.Split('\n');
+            var scores = new List<ScoredByte>();
 
+            foreach (var line in lines) {
+                scores.Add(FindXORCipher(line));
+            }
+            scores.Sort();
+            var answer = 88;
+            // Debug.Assert( result == answer );
+        }
     }
 }

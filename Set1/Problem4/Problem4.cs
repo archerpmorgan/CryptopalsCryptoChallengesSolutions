@@ -1,6 +1,7 @@
 using System.Net.NetworkInformation;
 using System.Globalization;
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -26,6 +27,7 @@ namespace solution_runner
             return this.score < o.score ? -1 : 1;
             }
         }
+
 
         // frequencies of letters in english (http://www.macfreek.nl/memory/Letter_Distribution)
         static private Dictionary<char, double> charFreqsReference = new Dictionary<char, double> {
@@ -83,7 +85,6 @@ namespace solution_runner
             
             // convert to ascii?
             ascii = Encoding.ASCII.GetString(cyphertext);
-            var chars = ascii.ToCharArray();
 
             score = getObservedDistance(ascii);
         }
@@ -99,7 +100,7 @@ namespace solution_runner
         }
 
         // assuming hex is an english string that has been XORd against one single byte character, find the most probable
-        static char FindXORCipher(string hex) {
+        static ScoredByte FindXORCipher(string hex) {
 
             char[] chars = hex.ToCharArray();
 
@@ -123,7 +124,7 @@ namespace solution_runner
             scores.Sort();
 
             //should return all ties here, but its clearly the second one
-            return (char) scores[1].b;
+            return scores[0];
         }
 
         static void Main(string[] args)
@@ -146,10 +147,17 @@ namespace solution_runner
             map.Add('e', 0b1110);
             map.Add('f', 0b1111);
 
-            var result = FindXORCipher("1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736");
-            var answer = 88;
-            Debug.Assert( result == answer );
-        }
+            var path = "Input.txt";
+            string text = System.IO.File.ReadAllText(path);
+            var lines = text.Split('\n');
+            var scores = new List<ScoredByte>();
 
+            foreach (var line in lines) {
+                scores.Add(FindXORCipher(line));
+            }
+            scores.Sort();
+            var answer = 88;
+            // Debug.Assert( result == answer );
+        }
     }
 }
