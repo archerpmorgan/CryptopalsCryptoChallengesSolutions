@@ -58,6 +58,29 @@ namespace solution_runner
             { 'x', .00141 },
             { 'y', .01427 },
             { 'z', .00051 },
+            { '\'', 0 },
+            { '"', 0 },
+            { ',', 0 },
+            { '.', 0 },
+        };
+
+        static private Dictionary<char, uint> map = new Dictionary<char, uint> {
+            {'0', 0b0000},
+            {'1', 0b0001},
+            {'2', 0b0010},
+            {'3', 0b0011},
+            {'4', 0b0100},
+            {'5', 0b0101},
+            {'6', 0b0110},
+            {'7', 0b0111},
+            {'8', 0b1000},
+            {'9', 0b1001},
+            {'a', 0b1010},
+            {'b', 0b1011},
+            {'c', 0b1100},
+            {'d', 0b1101},
+            {'e', 0b1110},
+            {'f', 0b1111},
         };
 
         // given a string, calculate a measure of how different the char frequencies are from what we would expect in an english sentence.
@@ -75,89 +98,77 @@ namespace solution_runner
             return accumulator;
         }
 
-        public ScoredByte(byte arg, byte[] cyphertext) {
+        private byte HexCoupletToByte(char[] hexCouplet){
+            //take the first nibble, shift it, add second nibble
+            return (byte) ((map[hexCouplet[0]] << 4) + map[hexCouplet[1]]);
+        }
+
+        public ScoredByte(byte arg, string keyHexExpanded, string cyphertextHex) {
+
             b = arg; 
 
-            // do the XOR, as XOR is its own inverse
-            for (int i = 0; i < cyphertext.Length; i++) {
-                cyphertext[i] = (byte) (cyphertext[i] ^ arg);
+            char[] keychars = keyHexExpanded.ToCharArray();
+            char[] cypherTextChars = cyphertextHex.ToCharArray();
+
+            // fill byte arrays with binary representation of the hex string 
+            byte[] keyBytes = new byte[keychars.Length / 2];
+            for (int i = 0; i < keychars.Length; i = i + 2) {
+                keyBytes[(int)(i/2)] = HexCoupletToByte(
+                    keychars.Skip(i)
+                    .Take(2)
+                    .ToArray()
+                );
             }
-            
-            // convert to ascii?
-            ascii = Encoding.ASCII.GetString(cyphertext);
+            byte[] cypherTextBytes = new byte[cypherTextChars.Length / 2];
+            for (int i = 0; i < cypherTextChars.Length; i = i + 2) {
+                cypherTextBytes[(int)(i/2)] = HexCoupletToByte(
+                    cypherTextChars.Skip(i)
+                    .Take(2)
+                    .ToArray()
+                );
+            }
+
+            var xorData = new byte[cypherTextBytes.Length];
+        
+            for (var i = 0; i < xorData.Length; i++)
+                xorData[i] = (byte) (cypherTextBytes[i] ^ keyBytes[i]);            // convert to ascii?
+            ascii = Encoding.ASCII.GetString(xorData);
 
             score = getObservedDistance(ascii);
         }
     }
     class Program
     {
-        
-        static Dictionary<char, uint> map = new Dictionary<char, uint>();
-
-        static byte HexCoupletToByte(char[] hexCouplet){
-            //take the first nibble, shift it, add second nibble
-            return (byte) ((map[hexCouplet[0]] << 4) + map[hexCouplet[1]]);
-        }
-
         // assuming hex is an english string that has been XORd against one single byte character, find the most probable
-        static ScoredByte FindXORCipher(string hex) {
+        static List<ScoredByte> FindXORCipher(string hexCypherText) {
 
-            char[] chars = hex.ToCharArray();
-
-            // fill byte arrays with binary representation of the hex string 
-            byte[] bytes = new byte[chars.Length / 2];
-            for (int i = 0; i < chars.Length; i = i + 2) {
-                bytes[(int)(i/2)] = HexCoupletToByte(
-                    chars.Skip(i)
-                    .Take(2)
-                    .ToArray()
-                );
-            }
             List<ScoredByte> scores = new List<ScoredByte>();
 
             // there are only so many possible chars. do the XOR against each, score the text, sort the results, pick the top
-            // do the XOR
-            for (int i = 0; i < 256; i++) {
-                scores.Add(new ScoredByte((byte)i, bytes));
+            for (int i = 0; i < 127; i++) {
+                var keyAsHex = Convert.ToString(i, 16);
+                var expandedKey = string.Empty;
+                while (expandedKey.Length < hexCypherText.Length) {
+                    expandedKey += keyAsHex;
+                }
+                scores.Add(new ScoredByte((byte)i, expandedKey, hexCypherText));
             }
-            
-            scores.Sort();
-
-            //should return all ties here, but its clearly the second one
-            return scores[0];
+            return scores;
         }
 
         static void Main(string[] args)
         {  
-            // for parsing the hex string
-            map.Add('0', 0b0000);
-            map.Add('1', 0b0001);
-            map.Add('2', 0b0010);
-            map.Add('3', 0b0011);
-            map.Add('4', 0b0100);
-            map.Add('5', 0b0101);
-            map.Add('6', 0b0110);
-            map.Add('7', 0b0111);
-            map.Add('8', 0b1000);
-            map.Add('9', 0b1001);
-            map.Add('a', 0b1010);
-            map.Add('b', 0b1011);
-            map.Add('c', 0b1100);
-            map.Add('d', 0b1101);
-            map.Add('e', 0b1110);
-            map.Add('f', 0b1111);
-
             var path = "Input.txt";
             string text = System.IO.File.ReadAllText(path);
             var lines = text.Split('\n');
             var scores = new List<ScoredByte>();
 
             foreach (var line in lines) {
-                scores.Add(FindXORCipher(line));
+                scores.AddRange(FindXORCipher(line));
             }
             scores.Sort();
-            var answer = 88;
-            // Debug.Assert( result == answer );
+            var answer = scores[0];
+            Debug.Assert(answer.ascii == "Now that the party is jumping\n");
         }
     }
 }

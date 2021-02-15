@@ -122,8 +122,7 @@ namespace solution_runner
             
             scores.Sort();
 
-            //should return all ties here, but its clearly the second one
-            return (char) scores[1].b;
+            return (char) scores[0].b;
         }
 
         static void Main(string[] args)
