@@ -1,4 +1,5 @@
-﻿using System.Net.NetworkInformation;
+﻿using System.ComponentModel;
+using System.Net.NetworkInformation;
 using System.Globalization;
 using System;
 using System.IO;
@@ -14,7 +15,14 @@ namespace solution_runner
         static int hammingDistance(byte[] a, byte[] b){
             int d = 0;
             for (int i = 0; i < a.Length; i++) {
-                d += a[i] == b[i] ? 0 : 1;
+                d += (a[i] & 0b_1000_0000) == (b[i] & 0b_1000_0000) ? 0 : 1;
+                d += (a[i] & 0b_0100_0000) == (b[i] & 0b_0100_0000) ? 0 : 1;
+                d += (a[i] & 0b_0010_0000) == (b[i] & 0b_0010_0000) ? 0 : 1;
+                d += (a[i] & 0b_0001_0000) == (b[i] & 0b_0001_0000) ? 0 : 1;
+                d += (a[i] & 0b_0000_1000) == (b[i] & 0b_0000_1000) ? 0 : 1;
+                d += (a[i] & 0b_0000_0100) == (b[i] & 0b_0000_0100) ? 0 : 1;
+                d += (a[i] & 0b_0000_0010) == (b[i] & 0b_0000_0010) ? 0 : 1;
+                d += (a[i] & 0b_0000_0001) == (b[i] & 0b_0000_0001) ? 0 : 1;
             }
             return d;
         }
@@ -43,11 +51,10 @@ namespace solution_runner
 
         static void Main(string[] args)
         {  
-            var text = "Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal";
-            var key = "ICE";
+            var keysize = 2;
 
-            var cyphertext = repeatingKeyXOR(key, text);
-            // Debug.Assert();
+            int result = hammingDistance(Encoding.ASCII.GetBytes(str1),Encoding.ASCII.GetBytes(str2));
+            Debug.Assert(result==37);
         }
     }
 }
