@@ -10,7 +10,7 @@ using System.Text;
 namespace solution_runner
 {
 
-    // a class for packaging a byte with the how likely it is that it was the cypher byte
+    // a class for packaging a byte with the how likely it is that it was the XOR cypher byte
     public class ScoredByte: IComparable {
 
         public double score { get; set; }
