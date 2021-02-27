@@ -7,9 +7,30 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Runtime.ExceptionServices;
 
 namespace solution_runner
 {
+    public class ScoredKeySize : IComparable
+    {
+
+        public double score { get; set; }
+        public int keySize { get; set; }
+
+        int IComparable.CompareTo(object obj)
+        {
+            ScoredKeySize o = (ScoredKeySize) obj;
+            if (o.score == this.score)
+            {
+                return 0;
+            }
+            else
+            {
+                return this.score < o.score ? -1 : 1;
+            }
+        }
+    }
+
     class Program
     {
         static int hammingDistance(byte[] a, byte[] b){
@@ -51,10 +72,50 @@ namespace solution_runner
 
         static void Main(string[] args)
         {  
-            var keysize = 2;
+            var path = @"C:\Users\armorgan\github\CryptopalsCryptoChallengesSolutions\solution-runner\Input.txt";
+            string text = System.IO.File.ReadAllText(path);
 
-            int result = hammingDistance(Encoding.ASCII.GetBytes(str1),Encoding.ASCII.GetBytes(str2));
-            Debug.Assert(result==37);
+            var keysize = findKeySize(text);
+
+            Debug.Assert(4==37);
+        }
+
+        private static int findKeySize(string textBase64)
+        {
+            List<ScoredKeySize> l = new List<ScoredKeySize>();
+            byte[] bytes = System.Convert.FromBase64String(textBase64);
+
+            //try candidates and update our choice if better 
+            for (int ks = 2; ks < 41; ks++)
+            {
+                // take summed hamming distance of first chunk of size ks with next 5 chunks
+                double accumulator = 0;
+                var firstChunk = bytes
+                        .Take(ks)
+                        .ToArray();
+
+                for (int i = 1; i<10; i++)
+                {
+                    var chunk = bytes.Skip(i * ks)
+                        .Take(ks)
+                        .ToArray();
+
+                    accumulator += (double) hammingDistance(firstChunk, chunk) / ks;
+                }
+
+                l.Add(new ScoredKeySize
+                        {
+                            score = accumulator,
+                            keySize = ks
+                        }
+                    );
+         
+                accumulator = 0;
+            }
+
+            l.Sort();
+
+            return l[0].keySize;
         }
     }
 }

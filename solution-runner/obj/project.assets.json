@@ -8,28 +8,26 @@
     "net5.0": []
   },
   "packageFolders": {
-    "/Users/archermorgan/.nuget/packages/": {},
-    "/usr/local/share/dotnet/sdk/NuGetFallbackFolder": {}
+    "C:\\Users\\armorgan\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/archermorgan/Documents/Personal Projects/Cryptopals/CryptopalsCryptoChallengesSolutions/solution-runner/solution-runner.csproj",
+      "projectUniqueName": "C:\\Users\\armorgan\\github\\CryptopalsCryptoChallengesSolutions\\solution-runner\\solution-runner.csproj",
       "projectName": "solution-runner",
-      "projectPath": "/Users/archermorgan/Documents/Personal Projects/Cryptopals/CryptopalsCryptoChallengesSolutions/solution-runner/solution-runner.csproj",
-      "packagesPath": "/Users/archermorgan/.nuget/packages/",
-      "outputPath": "/Users/archermorgan/Documents/Personal Projects/Cryptopals/CryptopalsCryptoChallengesSolutions/solution-runner/obj/",
+      "projectPath": "C:\\Users\\armorgan\\github\\CryptopalsCryptoChallengesSolutions\\solution-runner\\solution-runner.csproj",
+      "packagesPath": "C:\\Users\\armorgan\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\armorgan\\github\\CryptopalsCryptoChallengesSolutions\\solution-runner\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
-      ],
       "configFilePaths": [
-        "/Users/archermorgan/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\armorgan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -62,7 +60,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.100/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.103\\RuntimeIdentifierGraph.json"
       }
     }
   }
